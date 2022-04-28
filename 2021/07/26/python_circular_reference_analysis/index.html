@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="zh-CN" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/img/logo.jpeg">
+  <title>禾</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 5.3.0"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/img/logo.jpeg">
+      
+      <span class="navbar-logo-dsc">禾</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">首页 </a>
+    
+    <a href="/archives" class="navbar-menu-item">归档 </a>
+    
+    <a href="/tags" class="navbar-menu-item">标签 </a>
+    
+    <a href="/categories" class="navbar-menu-item">分类 </a>
+    
+    <a href="/about" class="navbar-menu-item">关于 </a>
+    
+    <a href="/links" class="navbar-menu-item">友链 </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      Python 循环引用分析
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2021-07-26T01:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2021-07-26</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/Python/" class="post-meta-link">Python</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>678 字</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/Python/" class="post-meta-link">Python</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/ImportError/" class="post-meta-link">ImportError</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <h1 id="Python-循环引用分析"><a href="#Python-循环引用分析" class="headerlink" title="Python 循环引用分析"></a>Python 循环引用分析</h1><h2 id="文件-代码结构"><a href="#文件-代码结构" class="headerlink" title="文件-代码结构"></a>文件-代码结构</h2><pre class="highlight"><span class="line">.</span><br><span class="line">├── main.py</span><br><span class="line">├── my_test</span><br><span class="line">│   ├── __init__.py</span><br><span class="line">│   ├── a.py</span><br><span class="line">│   └── b.py</span><br><span class="line">└── my_test2</span><br><span class="line">    ├── __init__.py</span><br><span class="line">    └── c.py</span><br></pre>
+<pre class="highlight"><span class="line"><span class="comment"># main.py</span></span><br><span class="line"><span class="keyword">from</span> my_test2.c <span class="keyword">import</span> cc</span><br><span class="line">cc()</span><br></pre>
+<pre class="highlight"><span class="line"><span class="comment"># my_test.__init__.py</span></span><br><span class="line">print(<span class="string">&#x27;my test init&#x27;</span>)</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> a</span><br><span class="line"><span class="keyword">from</span> . <span class="keyword">import</span> b</span><br></pre>
+<pre class="highlight"><span class="line"><span class="comment"># my_test.a.py</span></span><br><span class="line">print(<span class="string">&#x27;import a&#x27;</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">aa</span>():</span></span><br><span class="line">    print(<span class="string">&#x27;aa&#x27;</span>)</span><br></pre>
+<pre class="highlight"><span class="line"><span class="comment"># my_test.b.py</span></span><br><span class="line">print(<span class="string">&#x27;import b&#x27;</span>)</span><br><span class="line"><span class="keyword">from</span> my_test2.c <span class="keyword">import</span> cc</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bb</span>():</span></span><br><span class="line">    cc()</span><br><span class="line">    print(<span class="string">&#x27;bb&#x27;</span>)</span><br></pre>
+<pre class="highlight"><span class="line"><span class="comment"># my_test2.__init__.py</span></span><br><span class="line">print(<span class="string">&#x27;my test2 init&#x27;</span>)</span><br><span class="line"></span><br></pre>
+<pre class="highlight"><span class="line"><span class="comment"># my_test2.c.py</span></span><br><span class="line">print(<span class="string">&#x27;import c&#x27;</span>)</span><br><span class="line"><span class="keyword">from</span> my_test.a <span class="keyword">import</span> aa</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">cc</span>():</span></span><br><span class="line">    aa()</span><br><span class="line">    print(<span class="string">&#x27;cc&#x27;</span>)</span><br></pre>
+
+
+<h2 id="原理解读"><a href="#原理解读" class="headerlink" title="原理解读"></a>原理解读</h2><p>python包或者文件中的非函数非类部分代码只会在第一次被引用时运行，而且只会运行一次。</p>
+<p>其他有关<code>__init__</code>相关的知识请参考<a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/tutorial/modules.html#importing-from-a-package">官方中文文档</a></p>
+<h2 id="运行逻辑"><a href="#运行逻辑" class="headerlink" title="运行逻辑"></a>运行逻辑</h2><p>也就是说在本次的代码示例中，程序的运行逻辑是这样的：</p>
+<ol>
+<li>main.py初始化，运行<code>from my_test2.c import cc</code>这行代码</li>
+<li><code>my_test2</code>包被引用，首先运行<code>my_test2.__init__.py</code>里面的代码，为空，继续调用<code>my_text.c</code></li>
+<li><code>my_test2.c</code> 被调用，在 <code>my_test2.c</code> 中首先运行 <code>from my_test.a import aa</code> </li>
+<li><code>my_test</code>包被调用，首先运行 <code>my_test.__init__.py</code>  中的代码，</li>
+<li>在<code>my_test.__init__.py</code> 文件中，运行 <code>from . import a</code>   <code>from . import b</code> 两行代码，分别调用<code>my_test.a</code> <code>my_test.b</code>两个文件，及运行非函数/非类的代码</li>
+<li>引用到<code>my_test.b</code>的时候，会运行<code>from my_test2.c import cc</code>，由于在第一步已经导入过了，此时会触发报错：<code>ImportError: cannot import name &#39;cc&#39; from partially initialized module &#39;my_test2.c&#39; (most likely due to a circular import)</code></li>
+</ol>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>由上述逻辑可知循环引用为：<code>my_test2 --&gt; my_test2.c --&gt; my_test --&gt; my_test.__init__ --&gt; my_test.b --&gt;my_text2 </code></p>
+<h4 id="1-【不推荐】首先引入my-test包，修改引用逻辑"><a href="#1-【不推荐】首先引入my-test包，修改引用逻辑" class="headerlink" title="1.【不推荐】首先引入my_test包，修改引用逻辑:"></a>1.【不推荐】首先引入<code>my_test</code>包，修改引用逻辑:</h4><p>修改 <code>main.py</code> 代码如下</p>
+<pre class="highlight"><span class="line"><span class="keyword">import</span> my_test</span><br><span class="line"><span class="keyword">from</span> my_test2.c <span class="keyword">import</span> cc</span><br><span class="line"></span><br><span class="line">cc()</span><br></pre>
+<p>引用逻辑为：</p>
+<ul>
+<li><code>import my test</code> –&gt;<code> my_test --&gt; my_test.__init__ --&gt; my_test.b --&gt;my_text2 --&gt; my_test2.c</code></li>
+<li><code>from my_test2.c import cc</code> –&gt; <code>my_text2 --&gt; my_test2.c</code> 由于该包在上句代码中已经引用过了，所以这里不会重复引用</li>
+</ul>
+<h4 id="2-【不推荐】修改引用逻辑到函数内部，让其在运行的时候才会导入，避免导入发生在同一语句中"><a href="#2-【不推荐】修改引用逻辑到函数内部，让其在运行的时候才会导入，避免导入发生在同一语句中" class="headerlink" title="2. 【不推荐】修改引用逻辑到函数内部，让其在运行的时候才会导入，避免导入发生在同一语句中"></a>2. 【不推荐】修改引用逻辑到函数内部，让其在运行的时候才会导入，避免导入发生在同一语句中</h4><p>   修改 <code>b.py</code>为：</p>
+   <pre class="highlight"><span class="line">print(<span class="string">&#x27;import b&#x27;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">bb</span>():</span></span><br><span class="line">    <span class="keyword">from</span> my_test2.c <span class="keyword">import</span> cc</span><br><span class="line">    cc()</span><br><span class="line">    print(<span class="string">&#x27;bb&#x27;</span>)</span><br></pre>
+<p>   这样运行main.py的引用逻辑就修改为了<code>my_test2 --&gt; my_test2.c --&gt; my_test --&gt; my_test.__init__ --&gt; my_test.b</code> 当调用到<code>bb()</code>函数的时候才会导入包<code>my_test2</code>而这时已经导入过该包了，所以也不会构成循环引用</p>
+<h4 id="3-重构"><a href="#3-重构" class="headerlink" title="3. 重构"></a>3. 重构</h4><p>   能够构成循环引用，多半是因为结构设计的不合理，优化代码结构，增加可维护性。</p>
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><pre class="highlight"><span class="line"># 第一种解决方案</span><br><span class="line">my test init</span><br><span class="line">import a</span><br><span class="line">import b</span><br><span class="line">my test2 init</span><br><span class="line">import c</span><br><span class="line">aa</span><br><span class="line">cc</span><br></pre>
+<pre class="highlight"><span class="line"># 第二种解决方案</span><br><span class="line">my test2 init</span><br><span class="line">import c</span><br><span class="line">my test init</span><br><span class="line">import a</span><br><span class="line">import b</span><br><span class="line">aa</span><br><span class="line">cc</span><br></pre>
+
+
+  </div>
+  <div>
+  
+  <div class="post-note note-warning copyright" style="margin-top: 42px">
+    <p><span style="font-weight: bold;">作者：</span><a target="_blank" rel="nofollow noopener noreferrer" href="http://beants.github.io/about">禾</a></p>
+    <p><span style="font-weight: bold;">文章链接：</span><a target="_blank" rel="nofollow noopener noreferrer" href="http://beants.github.io/2021/07/26/python_circular_reference_analysis/">http://beants.github.io/2021/07/26/python_circular_reference_analysis/</a></p>
+    <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
+  </div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  <div class="nav-item-prev">
+    <a href="/2022/03/08/python_raise_exceptions_analysis/" class="nav-link">
+      <i class="iconfont icon-left nav-prev-icon"></i>
+      <div>
+        <div class="nav-label">上一篇</div>
+        
+        <div class="nav-title">有关Python中抛出异常的思考 </div>
+        
+      </div>
+    </a>
+  </div>
+  
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E5%88%86%E6%9E%90"><span class="toc-text">Python 循环引用分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-text">文件-代码结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E8%A7%A3%E8%AF%BB"><span class="toc-text">原理解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91"><span class="toc-text">运行逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E3%80%90%E4%B8%8D%E6%8E%A8%E8%8D%90%E3%80%91%E9%A6%96%E5%85%88%E5%BC%95%E5%85%A5my-test%E5%8C%85%EF%BC%8C%E4%BF%AE%E6%94%B9%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91"><span class="toc-text">1.【不推荐】首先引入my_test包，修改引用逻辑:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E3%80%90%E4%B8%8D%E6%8E%A8%E8%8D%90%E3%80%91%E4%BF%AE%E6%94%B9%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91%E5%88%B0%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%EF%BC%8C%E8%AE%A9%E5%85%B6%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E6%97%B6%E5%80%99%E6%89%8D%E4%BC%9A%E5%AF%BC%E5%85%A5%EF%BC%8C%E9%81%BF%E5%85%8D%E5%AF%BC%E5%85%A5%E5%8F%91%E7%94%9F%E5%9C%A8%E5%90%8C%E4%B8%80%E8%AF%AD%E5%8F%A5%E4%B8%AD"><span class="toc-text">2. 【不推荐】修改引用逻辑到函数内部，让其在运行的时候才会导入，避免导入发生在同一语句中</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E9%87%8D%E6%9E%84"><span class="toc-text">3. 重构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">运行结果</span></a></li></ol></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/img/logo.jpeg" class="author-img">
+
+<p class="author-name">禾</p>
+<p class="author-description">瞎玩</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>3</span>
+    <span>文章</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>1</span>
+    <span>分类</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>5</span>
+    <span>标签</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E5%88%86%E6%9E%90"><span class="toc-text">Python 循环引用分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-text">文件-代码结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E8%A7%A3%E8%AF%BB"><span class="toc-text">原理解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91"><span class="toc-text">运行逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E3%80%90%E4%B8%8D%E6%8E%A8%E8%8D%90%E3%80%91%E9%A6%96%E5%85%88%E5%BC%95%E5%85%A5my-test%E5%8C%85%EF%BC%8C%E4%BF%AE%E6%94%B9%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91"><span class="toc-text">1.【不推荐】首先引入my_test包，修改引用逻辑:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E3%80%90%E4%B8%8D%E6%8E%A8%E8%8D%90%E3%80%91%E4%BF%AE%E6%94%B9%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91%E5%88%B0%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%EF%BC%8C%E8%AE%A9%E5%85%B6%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E6%97%B6%E5%80%99%E6%89%8D%E4%BC%9A%E5%AF%BC%E5%85%A5%EF%BC%8C%E9%81%BF%E5%85%8D%E5%AF%BC%E5%85%A5%E5%8F%91%E7%94%9F%E5%9C%A8%E5%90%8C%E4%B8%80%E8%AF%AD%E5%8F%A5%E4%B8%AD"><span class="toc-text">2. 【不推荐】修改引用逻辑到函数内部，让其在运行的时候才会导入，避免导入发生在同一语句中</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E9%87%8D%E6%9E%84"><span class="toc-text">3. 重构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">运行结果</span></a></li></ol></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>分类</div>
+  <div class="categories-list">
+    
+      <a href="/categories/Python">
+        <div class="categories-list-item">
+          Python
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>热门标签</div>
+  <div class="tags-list">
+    
+    <a href="\tags\Python" title="Python"><div class="tags-list-item">Python</div></a>
+    
+    <a href="\tags\raise Exception" title="raise Exception"><div class="tags-list-item">raise Exception</div></a>
+    
+    <a href="\tags\ImportError" title="ImportError"><div class="tags-list-item">ImportError</div></a>
+    
+    <a href="\tags\Process" title="Process"><div class="tags-list-item">Process</div></a>
+    
+    <a href="\tags\signal" title="signal"><div class="tags-list-item">signal</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-%E5%BE%AA%E7%8E%AF%E5%BC%95%E7%94%A8%E5%88%86%E6%9E%90"><span class="toc-text">Python 循环引用分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6-%E4%BB%A3%E7%A0%81%E7%BB%93%E6%9E%84"><span class="toc-text">文件-代码结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%9F%E7%90%86%E8%A7%A3%E8%AF%BB"><span class="toc-text">原理解读</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E9%80%BB%E8%BE%91"><span class="toc-text">运行逻辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E3%80%90%E4%B8%8D%E6%8E%A8%E8%8D%90%E3%80%91%E9%A6%96%E5%85%88%E5%BC%95%E5%85%A5my-test%E5%8C%85%EF%BC%8C%E4%BF%AE%E6%94%B9%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91"><span class="toc-text">1.【不推荐】首先引入my_test包，修改引用逻辑:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E3%80%90%E4%B8%8D%E6%8E%A8%E8%8D%90%E3%80%91%E4%BF%AE%E6%94%B9%E5%BC%95%E7%94%A8%E9%80%BB%E8%BE%91%E5%88%B0%E5%87%BD%E6%95%B0%E5%86%85%E9%83%A8%EF%BC%8C%E8%AE%A9%E5%85%B6%E5%9C%A8%E8%BF%90%E8%A1%8C%E7%9A%84%E6%97%B6%E5%80%99%E6%89%8D%E4%BC%9A%E5%AF%BC%E5%85%A5%EF%BC%8C%E9%81%BF%E5%85%8D%E5%AF%BC%E5%85%A5%E5%8F%91%E7%94%9F%E5%9C%A8%E5%90%8C%E4%B8%80%E8%AF%AD%E5%8F%A5%E4%B8%AD"><span class="toc-text">2. 【不推荐】修改引用逻辑到函数内部，让其在运行的时候才会导入，避免导入发生在同一语句中</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E9%87%8D%E6%9E%84"><span class="toc-text">3. 重构</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E7%BB%93%E6%9E%9C"><span class="toc-text">运行结果</span></a></li></ol></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>最近文章</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-04-28</div>
+        <a href="/2022/04/28/how_to_update_python_project_gracefully/"><div class="recent-posts-item-content">如何优雅的更新Python Project</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-03-08</div>
+        <a href="/2022/03/08/python_raise_exceptions_analysis/"><div class="recent-posts-item-content">有关Python中抛出异常的思考</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-07-26</div>
+        <a href="/2021/07/26/python_circular_reference_analysis/"><div class="recent-posts-item-content">Python 循环引用分析</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2022
+        </span>
+        <a href="/" class="footer-link">禾 </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+  <script>
+    var googleAnalytics = function() {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-H38TZS70WV');
+    }
+  </script>
+  <script>loadScript("https://www.googletagmanager.com/gtag/js?id=" + "G-H38TZS70WV", googleAnalytics)</script>
+  
+</body>
+
+</html>
