@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<meta  lang="zh-CN" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="theme-color" content="#fff" id="theme-color">
+  <link rel="icon" href="/img/logo.jpeg">
+  <title>马旭</title>
+  <script>
+    // control reverse button
+    var reverseDarkList = {
+      dark: 'light',
+      light: 'dark'
+    };
+    var themeColor = {
+      dark: '#1c1c1e',
+      light: '#fff'
+    }
+    // get the data of css prefers-color-scheme
+    var getCssMediaQuery = function() {
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    };
+    // reverse current darkmode setting function
+    var reverseDarkModeSetting = function() {
+      var setting = localStorage.getItem('user-color-scheme');
+      if(reverseDarkList[setting]) {
+        setting = reverseDarkList[setting];
+      } else if(setting === null) {
+        setting = reverseDarkList[getCssMediaQuery()];
+      } else {
+        return;
+      }
+      localStorage.setItem('user-color-scheme', setting);
+      return setting;
+    };
+    // apply current darkmode setting
+    var setDarkmode = function(mode) {
+      var setting = mode || localStorage.getItem('user-color-scheme');
+      if(setting === getCssMediaQuery()) {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else if(reverseDarkList[setting]) {
+        document.documentElement.setAttribute('data-user-color-scheme', setting);
+        document.getElementById('theme-color').content = themeColor[setting];
+      } else {
+        document.documentElement.removeAttribute('data-user-color-scheme');
+        localStorage.removeItem('user-color-scheme');
+        document.getElementById('theme-color').content = themeColor[getCssMediaQuery()];
+      }
+    };
+    setDarkmode();
+  </script>
+  <script>
+    function loadScript(url, cb) {
+      var script = document.createElement('script');
+      script.src = url;
+      if (cb) script.onload = cb;
+      script.async = true;
+      document.body.appendChild(script);
+    }
+  </script>
+  
+  <link rel="preload" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css" as="style" >
+  <link rel="preload" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css" as="style" >
+  
+  <link rel="preload" href="//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js" as="script">
+  
+  
+  <link rel="preload" href="/js/lib/lozad.min.js" as="script">
+  
+  
+  
+  
+  
+  
+  
+  
+<link rel="stylesheet" href="/css/main.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1946621_vpj3dq9ceqa.css">
+
+  
+  
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1952792_89b4ac4k4up.css">
+
+  
+  
+  
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+
+<body>
+  <div class="wrapper">
+    
+    <nav class="navbar">
+  <div class="navbar-logo">
+    <span class="navbar-logo-main">
+      
+      <img class="navbar-logo-img" src="/img/logo.jpeg">
+      
+      <span class="navbar-logo-dsc">马旭</span>
+    </span>
+  </div>
+  <div class="navbar-menu">
+    
+    <a href="/" class="navbar-menu-item">首页 </a>
+    
+    <a href="/archives" class="navbar-menu-item">归档 </a>
+    
+    <a href="/tags" class="navbar-menu-item">标签 </a>
+    
+    <a href="/categories" class="navbar-menu-item">分类 </a>
+    
+    <a href="/about" class="navbar-menu-item">关于 </a>
+    
+    <a href="/links" class="navbar-menu-item">友链 </a>
+    
+    <a class="navbar-menu-item darknavbar" id="dark"><i class="iconfont icon-weather"></i></a>
+  </div>
+</nav>
+    
+    <div class="section-wrap">
+      <div class="container">
+        <div class="columns">
+          <main class="main-column">
+<article class="card card-content">
+  <header>
+    <h1 class="post-title">
+      AI落地是一把手工程：我用一年时间验证了所有错误答案
+    </h1>
+  </header>
+  <div class="post-meta post-show-meta">
+    <time datetime="2026-06-29T02:00:00.000Z" style="display: flex; align-items: center;">
+      <i class="iconfont icon-calendar" style="margin-right: 2px;"></i>
+      <span>2026-06-29</span>
+    </time>
+    
+    <span class="dot"></span>
+    
+    <a href="/categories/AI落地/" class="post-meta-link">AI落地</a>
+    
+    
+    
+    <span class="dot"></span>
+    <span>3.5k 字</span>
+    
+  </div>
+  
+  <div class="post-meta post-show-meta" style="margin-top: -10px;">
+    <div style="display: flex; align-items: center;">
+      <i class="iconfont icon-biaoqian" style="margin-right: 2px; font-size: 1.15rem;"></i>
+      
+      
+        <a href="/tags/AI/" class="post-meta-link">AI</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/组织设计/" class="post-meta-link">组织设计</a>
+      
+      
+      <span class="dot"></span>
+      
+        <a href="/tags/AI落地/" class="post-meta-link">AI落地</a>
+      
+    </div>
+  </div>
+  
+  </header>
+  <div id="section" class="post-content">
+    <blockquote>
+<p>这篇文章不是方法论，是伤疤。</p>
+</blockquote>
+<p>我做过数十个企业智能体，从0规划到落地，模型训了十几个，系统扛过日均十万级的请求。简历解析从20秒优化到3秒，准确率从80%提到90%以上。人才搜索从10秒降到0.1秒。简历筛选效率提升83%，投递效率提升67%。技术层面，该踩的坑我基本都踩过了。</p>
+<p>但我离开上一家公司的时候，这些系统大部分还活着，有些已经没什么人用了。技术没问题，组织从来没准备好接住它们。</p>
+<p>这一年的经历让我确信一件事：企业AI落地的成败，80%取决于组织设计，20%才是技术。如果你是决策者，准备在公司里搞AI，这篇文章可能会帮你省掉一年的学费。</p>
+<hr>
+<h2 id="先说结论"><a href="#先说结论" class="headerlink" title="先说结论"></a>先说结论</h2><p>AI落地是一把手工程。</p>
+<p>这里的”一把手”不是指CEO挂名。它是指那个真正负责推动AI落地的人，必须同时具备三样东西：</p>
+<ul>
+<li><strong>技术判断力</strong></li>
+<li><strong>资源调配权</strong></li>
+<li><strong>跨部门推动力</strong></li>
+</ul>
+<p>少一样，项目就会在某个环节卡死。</p>
+<p>我在过去一年里，把三种死法全体验了一遍。</p>
+<hr>
+<h2 id="负责人需要什么"><a href="#负责人需要什么" class="headerlink" title="负责人需要什么"></a>负责人需要什么</h2><h3 id="技术判断力"><a href="#技术判断力" class="headerlink" title="技术判断力"></a>技术判断力</h3><p>AI项目的技术决策密度极高。用什么模型、什么时候微调什么时候用prompt工程、数据标注投入多大、评测体系怎么搭、延迟和准确率怎么取舍。每一个决策都有十种方案，九种是错的。</p>
+<p>负责人自己没有技术判断力的话，他会被供应商牵着走，被PPT忽悠，把资源投在看起来先进但实际没用的方向上。团队提出方案时他无法判断优劣，最后只能靠”谁嗓门大”或”谁级别高”来决策。</p>
+<p>我见过最典型的场景：业务方说”我们要用大模型”，技术团队说”这个任务小模型就够了”，但负责人不懂为什么小模型够用，不敢拍板，最后上了大模型，成本翻了十倍，效果跟小模型差不多。</p>
+<p>技术判断力的底线是什么？负责人不需要会写代码，但他得能听懂技术团队在说什么，能判断方案的合理性，能在”看起来很酷”和”真正解决问题”之间做区分。</p>
+<h3 id="资源调配权"><a href="#资源调配权" class="headerlink" title="资源调配权"></a>资源调配权</h3><p>这是最致命的一条。</p>
+<p>AI项目需要的资源远不止人。算力、预算、数据访问权限、模型调用额度，每一项都可能成为卡点。如果负责人没有调配这些资源的权力，他就会变成一个传话筒，把需求一层一层往上报，等批下来的时候市场窗口已经关了。</p>
+<p>我经历过这样的环境：想用一个模型的API，需要走海外采购流程，审批周期以月计。想训一个模型，公司没有算力平台，靠领导自掏腰包买了一张显卡才跑起来。防火墙把主流大模型的接口全封了，申请解封的流程比开发流程还长。</p>
+<p>在这种环境里，你的精力80%耗在”怎么拿到资源”上，只有20%能用在实际开发上。我跟同事开玩笑，说我们干的不是AI，是”AI极限生存”。</p>
+<p>负责人如果有资源调配权，这些问题他一句话就能解决。如果没有，他只能帮你跑流程，而你只能等。</p>
+<h3 id="跨部门推动力"><a href="#跨部门推动力" class="headerlink" title="跨部门推动力"></a>跨部门推动力</h3><p>AI项目几乎不可能在一个部门内部闭环。它需要数据（数据团队有）、需要业务输入（业务部门有）、需要部署运维（IT部门有）、需要安全审核（安全团队有）。</p>
+<p>负责人推不动其他部门的时候，事情就会变成这样：</p>
+<p>产品部门承担了基础设施建设的活，做完了去找交付部门评审，交付部门说”你们自己搞的，我们不背书”。基础技术部门说”你们先做，做完了我们看看”。每个人都在踢皮球，最终所有活落到一个人头上。</p>
+<p>一个人既要做架构设计，又要写代码，还要做运维测试，同时还得写PPT汇报。最后做出来的东西，没有运维团队愿意接手维护，没有业务部门知道怎么用，变成一个”技术孤儿”。</p>
+<p>负责人需要的不只是行政权力，是在组织里说话有人听、推事有人跟的分量。没有这个，AI项目就是一个没有地基的楼，技术团队再努力也是在沙滩上盖房子。</p>
+<hr>
+<h2 id="最小团队配置"><a href="#最小团队配置" class="headerlink" title="最小团队配置"></a>最小团队配置</h2><p>如果你问我，一个AI项目最少需要什么样的人，我的答案是四个角色。一个人可以兼多个角色，但角色不能缺。</p>
+<ol>
+<li><strong>AI工程师</strong>，负责模型、Agent、RAG这些核心AI能力的开发和调优。这个人必须能独立交付，因为初期大概率没有团队给他分摊。</li>
+<li><strong>数据工程师</strong>，负责数据管道、数据清洗、数据质量。AI的尽头是数据，没有干净的数据，模型再强也是垃圾进垃圾出。我见过太多项目死在数据上，不是模型不行，是喂给模型的数据没人维护。</li>
+<li><strong>业务接口人</strong>。这个角色经常被忽视。他要真正懂业务，能把业务需求翻译成技术语言，也能把技术能力翻译成业务价值。他决定了你做的东西有没有人用。</li>
+<li><strong>运维&#x2F;基建</strong>，负责部署、监控、扩容、模型服务。AI系统的运维复杂度远超传统应用，模型推理的延迟、并发、资源调度都需要专门的基建能力。</li>
+</ol>
+<p>这四个角色看起来理所当然，但在初创团队里几乎从来凑不齐。我自己就经历过一个人扛所有角色的情况。</p>
+<p>缺数据工程师的时候，你的模型永远在”数据不够好”的循环里打转。每次效果不好都怀疑模型，其实是数据的问题。我见过太多项目死在这上面。</p>
+<p>没有业务接口人更隐蔽。你做的东西业务方不会用，或者用起来发现跟你做的不是一个东西。需求和交付之间永远隔着一层纱。</p>
+<p>运维缺位是最晚暴露的。系统上线的时候一切正常，出问题只能靠开发自己救火，最后开发的时间全用在运维上，新功能停更。</p>
+<p>短期可以靠个人能力硬撑，但只要项目规模稍微扩大，缺位就会暴露，而且暴露的方式通常是线上事故。</p>
+<hr>
+<h2 id="我经历过的几个教训"><a href="#我经历过的几个教训" class="headerlink" title="我经历过的几个教训"></a>我经历过的几个教训</h2><p>以下每一条都是我自己交了学费的。</p>
+<h3 id="教训一：没有算力，一切免谈"><a href="#教训一：没有算力，一切免谈" class="headerlink" title="教训一：没有算力，一切免谈"></a>教训一：没有算力，一切免谈</h3><p>我入职后发现公司没有AI算力平台。训模型靠的是领导自己花钱买的一张消费级显卡。用模型API需要走海外采购流程，审批周期长到你怀疑人生。</p>
+<p>在这种条件下，我的团队确实训出了十几个模型，搭出了数十个智能体。基座模型的首 Token 延迟从 10 秒压到 1 秒。但每一个本该花在算法调优上的小时，都花在了”怎么搞到算力”上。</p>
+<p>如果你的公司想搞AI，先解决算力问题。不需要一上来就买H100集群，但至少得有一条稳定的模型API调用渠道，得有一个能跑微调的环境。连这个都没有，后面的投入全是浪费。</p>
+<h3 id="教训二：防火墙封了LLM"><a href="#教训二：防火墙封了LLM" class="headerlink" title="教训二：防火墙封了LLM"></a>教训二：防火墙封了LLM</h3><p>这件事听起来离谱，但在很多传统企业里是现实。公司安全策略把主流大模型的API全部封掉了，理由是数据安全。</p>
+<p>数据安全的担忧是合理的。但解法不是封掉，是建内网代理或私有化部署。一刀切封掉的结果是：技术团队要么绕过防火墙（安全风险更大），要么放弃用LLM（那搞什么AI）。</p>
+<p>如果你的安全团队对LLM的态度是”封了最安全”，你需要作为负责人去拉通安全和技术两个团队，找到一个”既安全又能用”的方案。</p>
+<h3 id="教训三：角色错位"><a href="#教训三：角色错位" class="headerlink" title="教训三：角色错位"></a>教训三：角色错位</h3><p>我顶着”AI产品经理”的头衔，干的却是技术经理和架构师的活。我做了五年算法工程师，擅长的是系统架构和模型落地，不是画原型图写PRD。</p>
+<p>这种错位看起来不大，实际上很消耗。我每天在写代码和搭系统，但汇报的时候得用产品经理的框架。团队需要一个真正的产品经理，但这个位置被我占着，而我在做技术的事。两边都不舒服。</p>
+<p>技术人放在技术岗上，他创造的价值最大。硬给他一个不匹配的角色，不管那个角色听起来多重要，结果都是错位。</p>
+<h3 id="教训四：有责无权"><a href="#教训四：有责无权" class="headerlink" title="教训四：有责无权"></a>教训四：有责无权</h3><p>我负责规划智能体生态，做出来了，但没有推广权。推广是另一个部门的事，而那个部门的KPI跟AI落地没有关系。</p>
+<p>最后的结果是：智能体做出来了，在团队内部跑得很好，但用户量上不去，因为没有人在业务侧推。技术团队不能自己去业务部门”推销”自己的产品，这需要组织层面的推动。</p>
+<p>你让一个技术团队负责AI落地，却不给他们对业务侧的影响力，这个项目就会变成”技术自嗨”。做出来的好东西，在某个角落里落灰。</p>
+<h3 id="教训五：核心人员留不住"><a href="#教训五：核心人员留不住" class="headerlink" title="教训五：核心人员留不住"></a>教训五：核心人员留不住</h3><p>我离职前的一段时间里，算法负责人走了，交付负责人也走了。一个团队的核心技术骨干在短期内连续流失，说明问题已经不是某个人的个人选择，是组织环境出了问题。</p>
+<p>人走了，项目知识跟着走了。新来的人要重新理解系统、重建上下文，这个成本是隐性的但极其巨大。我离开后，我做的那些系统，不知道还有多少在正常运行。</p>
+<p>AI人才本来就是稀缺资源。如果组织环境让这些人待不住，那你不是在积累AI能力，是在给别的公司培养人才。</p>
+<hr>
+<h2 id="离开之后"><a href="#离开之后" class="headerlink" title="离开之后"></a>离开之后</h2><p>写到这里，你可能会问：你说得这么笃定，有没有事后验证？</p>
+<p>有。</p>
+<p>我离开三个月后，和一个前同事聊了一次。他不是技术人员，是业务侧的。他告诉我几件事。</p>
+<p>第一，我走之后，没人接手。对应部门直接说”干不了，优化不动”。不是他们不努力，也不是方案本身不可行。是没有人有当时的全局上下文——哪些模块为什么这么设计，数据管道怎么接，评测标准怎么定。一个稍复杂的系统，一旦失去了设计者的上下文和持续的推动力，腐烂只是时间问题。</p>
+<p>第二，公司后来让另一个团队搭了一套统一的 Agent 框架。立项的时候吹得很好，意图识别、记忆管理、上下文管理，全都覆盖。实际验证的时候，连意图识别都不准。业务方去找他们，他们直接说”解决不了”。</p>
+<p>第三，之前讨论的技术路线升级计划也停了。现在要么把提示词硬写进代码里，要么用那个不好用的框架。原来规划的模块化、可组合的架构，退化成了最原始的做法。</p>
+<p>我不意外。</p>
+<p>还有一个旁观者。一个既懂技术又懂业务的人，对两边的组织都熟。他说了一句话：</p>
+<blockquote>
+<p>“这家公司不需要这么厉害的人，也能推进这个盘子，重点还是资源到位、上面支持推广。”</p>
+</blockquote>
+<p>他还说：”就算全面推进AI变革，最后的结果大概率也是东拼西凑。”</p>
+<p>这些话比我自己的判断更冷，也更准。因为他是旁观者，没有我的情绪和立场。</p>
+<p>跟我一起入职的人，待了两三周就走了。我留下来了，一个多月交付了产品。不是因为我比他更能扛，是因为我刚刚经历过一次完整的”组织杀死技术”的过程，知道在什么样的土壤里该种什么样的种子，知道哪些仗不值得打。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>我前领导在我离职后跟我说过一句话：</p>
+<blockquote>
+<p>“别浪费了你的能力就好。”</p>
+</blockquote>
+<p>他是管理者，站在他的位置上看得很清楚：那些系统没能在生产中真正发挥作用，不是我的技术不行，是组织没有为这些技术准备好土壤。</p>
+<p>如果你是决策者，准备在公司里推动AI落地，请记住三件事：</p>
+<ol>
+<li>选一个懂技术、能推事、有权调配资源的人来负责。</li>
+<li>给他配齐最小团队。</li>
+<li>把路铺好，让技术团队把精力花在技术上，而不是花在跟流程和部门墙搏斗上。</li>
+</ol>
+<p>做到这三点，剩下的技术问题都是小问题。做不到，请来的技术再强也没用。走了之后你才发现，他留下的东西，没有一个人接得住。</p>
+<hr>
+<p><em>这是「从业务场景到智能体生态」系列的特别篇。不谈技术，谈组织。因为很多时候，组织才是那个最大的技术问题。</em></p>
+
+  </div>
+  <div>
+  
+  <div class="post-note note-warning copyright" style="margin-top: 42px">
+    <p><span style="font-weight: bold;">作者：</span><a target="_blank" rel="nofollow noopener noreferrer" href="http://beants.github.io/about">马旭</a></p>
+    <p><span style="font-weight: bold;">文章链接：</span><a target="_blank" rel="nofollow noopener noreferrer" href="http://beants.github.io/2026/06/29/02-ai-leadership/">http://beants.github.io/2026/06/29/02-ai-leadership/</a></p>
+    <p><span style="font-weight: bold;">版权声明：</span>本博客所有文章除特别声明外，均采用<a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">CC BY-NC-SA 4.0 协议</a>。转载请注明出处！</p>
+  </div>
+  
+  </div>
+</article>
+<div class="nav">
+  
+  
+  <div class="nav-item-next">
+    <a href="/2022/04/28/how_to_update_python_project_gracefully/" class="nav-link">
+      <div>
+        <div class="nav-label">下一篇</div>
+        
+        <div class="nav-title">如何优雅的更新Python Project </div>
+        
+      </div>
+      <i class="iconfont icon-right nav-next-icon"></i>
+    </a>
+  </div>
+  
+</div>
+
+<div class="card card-content toc-card" id="mobiletoc">
+  <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA"><span class="toc-text">先说结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%B4%A3%E4%BA%BA%E9%9C%80%E8%A6%81%E4%BB%80%E4%B9%88"><span class="toc-text">负责人需要什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E5%88%A4%E6%96%AD%E5%8A%9B"><span class="toc-text">技术判断力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E8%B0%83%E9%85%8D%E6%9D%83"><span class="toc-text">资源调配权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%A8%E9%83%A8%E9%97%A8%E6%8E%A8%E5%8A%A8%E5%8A%9B"><span class="toc-text">跨部门推动力</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E5%9B%A2%E9%98%9F%E9%85%8D%E7%BD%AE"><span class="toc-text">最小团队配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%BB%8F%E5%8E%86%E8%BF%87%E7%9A%84%E5%87%A0%E4%B8%AA%E6%95%99%E8%AE%AD"><span class="toc-text">我经历过的几个教训</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%B8%80%EF%BC%9A%E6%B2%A1%E6%9C%89%E7%AE%97%E5%8A%9B%EF%BC%8C%E4%B8%80%E5%88%87%E5%85%8D%E8%B0%88"><span class="toc-text">教训一：没有算力，一切免谈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%BA%8C%EF%BC%9A%E9%98%B2%E7%81%AB%E5%A2%99%E5%B0%81%E4%BA%86LLM"><span class="toc-text">教训二：防火墙封了LLM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%B8%89%EF%BC%9A%E8%A7%92%E8%89%B2%E9%94%99%E4%BD%8D"><span class="toc-text">教训三：角色错位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E5%9B%9B%EF%BC%9A%E6%9C%89%E8%B4%A3%E6%97%A0%E6%9D%83"><span class="toc-text">教训四：有责无权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%BA%94%EF%BC%9A%E6%A0%B8%E5%BF%83%E4%BA%BA%E5%91%98%E7%95%99%E4%B8%8D%E4%BD%8F"><span class="toc-text">教训五：核心人员留不住</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%BB%E5%BC%80%E4%B9%8B%E5%90%8E"><span class="toc-text">离开之后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-text">最后</span></a></li></ol>
+</div></main>
+          <aside class="left-column">
+            
+            <div class="card card-author">
+              
+<img src="/img/logo.jpeg" class="author-img">
+
+<p class="author-name">马旭</p>
+<p class="author-description">企业级 AI 落地 · 智能体生态 · 垂域模型矩阵</p>
+<div class="author-message">
+  <a class="author-posts-count" href="/archives">
+    <span>4</span>
+    <span>文章</span>
+  </a>
+  <a class="author-categories-count" href="/categories">
+    <span>2</span>
+    <span>分类</span>
+  </a>
+  <a class="author-tags-count" href="/tags">
+    <span>8</span>
+    <span>标签</span>
+  </a>
+</div>
+
+            </div>
+            
+            <div class="sticky-tablet">
+  
+  
+  <article class="display-when-two-columns spacer">
+    <div class="card card-content toc-card">
+      <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA"><span class="toc-text">先说结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%B4%A3%E4%BA%BA%E9%9C%80%E8%A6%81%E4%BB%80%E4%B9%88"><span class="toc-text">负责人需要什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E5%88%A4%E6%96%AD%E5%8A%9B"><span class="toc-text">技术判断力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E8%B0%83%E9%85%8D%E6%9D%83"><span class="toc-text">资源调配权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%A8%E9%83%A8%E9%97%A8%E6%8E%A8%E5%8A%A8%E5%8A%9B"><span class="toc-text">跨部门推动力</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E5%9B%A2%E9%98%9F%E9%85%8D%E7%BD%AE"><span class="toc-text">最小团队配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%BB%8F%E5%8E%86%E8%BF%87%E7%9A%84%E5%87%A0%E4%B8%AA%E6%95%99%E8%AE%AD"><span class="toc-text">我经历过的几个教训</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%B8%80%EF%BC%9A%E6%B2%A1%E6%9C%89%E7%AE%97%E5%8A%9B%EF%BC%8C%E4%B8%80%E5%88%87%E5%85%8D%E8%B0%88"><span class="toc-text">教训一：没有算力，一切免谈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%BA%8C%EF%BC%9A%E9%98%B2%E7%81%AB%E5%A2%99%E5%B0%81%E4%BA%86LLM"><span class="toc-text">教训二：防火墙封了LLM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%B8%89%EF%BC%9A%E8%A7%92%E8%89%B2%E9%94%99%E4%BD%8D"><span class="toc-text">教训三：角色错位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E5%9B%9B%EF%BC%9A%E6%9C%89%E8%B4%A3%E6%97%A0%E6%9D%83"><span class="toc-text">教训四：有责无权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%BA%94%EF%BC%9A%E6%A0%B8%E5%BF%83%E4%BA%BA%E5%91%98%E7%95%99%E4%B8%8D%E4%BD%8F"><span class="toc-text">教训五：核心人员留不住</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%BB%E5%BC%80%E4%B9%8B%E5%90%8E"><span class="toc-text">离开之后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-text">最后</span></a></li></ol>
+    </div>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="categories-card">
+  <div class="categories-header"><i class="iconfont icon-fenlei" style="padding-right: 2px;"></i>分类</div>
+  <div class="categories-list">
+    
+      <a href="/categories/AI落地">
+        <div class="categories-list-item">
+          AI落地
+          <span class="categories-list-item-badge">1</span>
+        </div>
+      </a>
+    
+      <a href="/categories/Python">
+        <div class="categories-list-item">
+          Python
+          <span class="categories-list-item-badge">3</span>
+        </div>
+      </a>
+    
+  </div>
+</div>
+  </article>
+  
+  <article class="card card-content">
+    <div class="tags-card">
+  <div class="tags-header"><i class="iconfont icon-biaoqian" style="padding-right: 2px;"></i>热门标签</div>
+  <div class="tags-list">
+    
+    <a href="\tags\Python" title="Python"><div class="tags-list-item">Python</div></a>
+    
+    <a href="\tags\raise Exception" title="raise Exception"><div class="tags-list-item">raise Exception</div></a>
+    
+    <a href="\tags\ImportError" title="ImportError"><div class="tags-list-item">ImportError</div></a>
+    
+    <a href="\tags\Process" title="Process"><div class="tags-list-item">Process</div></a>
+    
+    <a href="\tags\signal" title="signal"><div class="tags-list-item">signal</div></a>
+    
+    <a href="\tags\AI落地" title="AI落地"><div class="tags-list-item">AI落地</div></a>
+    
+    <a href="\tags\组织设计" title="组织设计"><div class="tags-list-item">组织设计</div></a>
+    
+    <a href="\tags\AI" title="AI"><div class="tags-list-item">AI</div></a>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+          <aside class="right-column">
+            <div class="sticky-widescreen">
+  
+  
+  <article class="card card-content toc-card">
+    <div class="toc-header"><i class="iconfont icon-menu" style="padding-right: 2px;"></i>目录</div>
+<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E8%AF%B4%E7%BB%93%E8%AE%BA"><span class="toc-text">先说结论</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B4%9F%E8%B4%A3%E4%BA%BA%E9%9C%80%E8%A6%81%E4%BB%80%E4%B9%88"><span class="toc-text">负责人需要什么</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8A%80%E6%9C%AF%E5%88%A4%E6%96%AD%E5%8A%9B"><span class="toc-text">技术判断力</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E8%B0%83%E9%85%8D%E6%9D%83"><span class="toc-text">资源调配权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%A8%E9%83%A8%E9%97%A8%E6%8E%A8%E5%8A%A8%E5%8A%9B"><span class="toc-text">跨部门推动力</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E5%9B%A2%E9%98%9F%E9%85%8D%E7%BD%AE"><span class="toc-text">最小团队配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E7%BB%8F%E5%8E%86%E8%BF%87%E7%9A%84%E5%87%A0%E4%B8%AA%E6%95%99%E8%AE%AD"><span class="toc-text">我经历过的几个教训</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%B8%80%EF%BC%9A%E6%B2%A1%E6%9C%89%E7%AE%97%E5%8A%9B%EF%BC%8C%E4%B8%80%E5%88%87%E5%85%8D%E8%B0%88"><span class="toc-text">教训一：没有算力，一切免谈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%BA%8C%EF%BC%9A%E9%98%B2%E7%81%AB%E5%A2%99%E5%B0%81%E4%BA%86LLM"><span class="toc-text">教训二：防火墙封了LLM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%B8%89%EF%BC%9A%E8%A7%92%E8%89%B2%E9%94%99%E4%BD%8D"><span class="toc-text">教训三：角色错位</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E5%9B%9B%EF%BC%9A%E6%9C%89%E8%B4%A3%E6%97%A0%E6%9D%83"><span class="toc-text">教训四：有责无权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%99%E8%AE%AD%E4%BA%94%EF%BC%9A%E6%A0%B8%E5%BF%83%E4%BA%BA%E5%91%98%E7%95%99%E4%B8%8D%E4%BD%8F"><span class="toc-text">教训五：核心人员留不住</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A6%BB%E5%BC%80%E4%B9%8B%E5%90%8E"><span class="toc-text">离开之后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-text">最后</span></a></li></ol>
+  </article>
+  
+  
+  <article class="card card-content">
+    <div class="recent-posts-card">
+  <div class="recent-posts-header"><i class="iconfont icon-wenzhang_huaban" style="padding-right: 2px;"></i>最近文章</div>
+  <div class="recent-posts-list">
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2026-06-29</div>
+        <a href="/2026/06/29/02-ai-leadership/"><div class="recent-posts-item-content">AI落地是一把手工程：我用一年时间验证了所有错误答案</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-04-28</div>
+        <a href="/2022/04/28/how_to_update_python_project_gracefully/"><div class="recent-posts-item-content">如何优雅的更新Python Project</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2022-03-08</div>
+        <a href="/2022/03/08/python_raise_exceptions_analysis/"><div class="recent-posts-item-content">有关Python中抛出异常的思考</div></a>
+      </div>
+    
+      <div class="recent-posts-item">
+        <div class="recent-posts-item-title">2021-07-26</div>
+        <a href="/2021/07/26/python_circular_reference_analysis/"><div class="recent-posts-item-content">Python 循环引用分析</div></a>
+      </div>
+    
+  </div>
+</div>
+  </article>
+  
+  
+</div>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <footer class="footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-dsc">
+        <span>Copyright ©
+          
+          2020 -
+          
+          2026
+        </span>
+        <a href="/" class="footer-link">马旭 </a>
+      </div>
+    </div>
+
+    
+    <div class="footer-dsc">
+      
+      
+      Powered by
+      <a href="https://hexo.io/" class="footer-link" target="_blank" rel="nofollow noopener noreferrer">&nbsp;Hexo </a>
+      
+      
+      <span>&nbsp;|&nbsp;</span>
+      
+      
+      
+      Theme -
+      <a href="https://github.com/theme-kaze" class="footer-link" target="_blank"
+        rel="nofollow noopener noreferrer">&nbsp;Kaze</a>
+      
+    </div>
+    
+    
+    
+    
+</footer>
+  <a role="button" id="scrollbutton" class="basebutton" >
+  <i class="iconfont icon-arrowleft button-icon"></i>
+</a>
+<a role="button" id="menubutton" class="basebutton">
+  <i class="iconfont icon-menu button-icon"></i>
+</a>
+<a role="button" id="popbutton" class="basebutton">
+  <i class="iconfont icon-expand button-icon"></i>
+</a>
+<a role="button" id="darkbutton" class="basebutton darkwidget">
+  <i class="iconfont icon-weather button-icon"></i>
+</a>
+
+  
+  
+  
+  <script>
+  var addImgLayout = function () {
+    var img = document.querySelectorAll('.post-content img');
+    var i;
+    for (i = 0; i < img.length; i++) {
+      var wrapper = document.createElement('a');
+      wrapper.setAttribute('data-fslightbox', 'gallery');
+      wrapper.setAttribute('href', img[i].getAttribute('data-src'));
+      wrapper.setAttribute('style', 'width: 100%; display: flex; justify-content: center;');
+      img[i].parentElement.insertBefore(wrapper, img[i]);
+      wrapper.appendChild(img[i]);
+    }
+    refreshFsLightbox();
+  }
+</script>
+<script>loadScript("//cdn.jsdelivr.net/npm/fslightbox@3.1.0/index.min.js", addImgLayout)</script>
+  
+  
+  
+<script src="/js/main.js"></script>
+
+  
+  
+  <script>
+    var addLazyload = function () {
+      var observer = lozad('.lozad', {
+        load: function (el) {
+          el.srcset = el.getAttribute('data-src');
+        },
+        loaded: function (el) {
+          el.classList.add('loaded');
+        }
+      });
+      observer.observe();
+    }
+  </script>
+  <script>loadScript("/js/lib/lozad.min.js", addLazyload)</script>
+  
+  
+  <script>
+    var googleAnalytics = function() {
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-H38TZS70WV');
+    }
+  </script>
+  <script>loadScript("https://www.googletagmanager.com/gtag/js?id=" + "G-H38TZS70WV", googleAnalytics)</script>
+  
+</body>
+
+</html>
